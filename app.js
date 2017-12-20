@@ -13,18 +13,91 @@ var calendarController = (function(){
  
 //// VARIABLES ////
     var mealSchedule = [];
-    
-    
+    var weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     
     
 //// FUNCTION ////
-    function generateMonth(howManyWks, recipesObj){
+    Date.prototype.monthDays= function(){
+    var d= new Date(this.getFullYear(), this.getMonth()+1, 0);
+    return d.getDate();
+}
+    function updateWeekDay(startNum){
+        if(startNum < 6){
+            startNum++;
+        } else {
+            startNum = 0;
+        }
+        
+        return startNum;
+    
+    
+    function shapeWeekLists(someArray, startDay, someLength){
+        var tempArray = someArray;
+        var remainder = tempArray.length % someLength;
+        
+        tempArray[0].splice(0, startDay);
+        tempArray[(tempArray.length - 1)].splice(remainder);
+        
+        console.log(tempArray);
+    };
+    
+    
+    function writeCalendar(someYear, someMonth, mealsObj){
+        var testDate = new Date(someYear, someMonth, 1);
+        var monthLength = testDate.monthDays();
+        var whichDay = testDate.getDay();
+        
+        var monthArray = [];
+        var weekLists = [];
+        
+        for(var i = 0; i < monthLength; i++){
+            var tempArray = [];
+            
+        tempArray = [weekdays[whichDay], mealsObj.breakfastOrder[i], mealsObj.lunchOrder[i], mealsObj.dinnerOrder[i]];
+            
+            monthArray.push(tempArray);
+            
+            if(whichDay === 0 || i === (monthLength - 1)){
+                
+                weekLists.push(mealsObj.weeklyLists[weekLists.length]);
+            };
+            
+            whichDay = updateWeekDay(whichDay);
+        }
+        
+        shapeWeekLists(mealsObj.weeklyLists, whichDay, monthLength);
+        
+        console.log(monthArray);
+        console.log(weekLists);
+        // calendar dates
+    
+        
+        
+        // meals per day
+        
+        
+        // weekly food list
+        
+    };
+    
+    
+    
+    function generateMonth(howManyWks, recipesObj, someDateArray){
+        
+        var tempDate = new Date(someDateArray[0], someDateArray[1], 1);
+        var startDay = tempDate.getDay();
+        var monthLength = tempDate.monthDays();
+        var remainder = monthLength % 7;
+        
+        
+        
         var recipes = recipesObj;
         var weeks = [];
         console.log(howManyWks);
+        var length = 7;
         // console.log(Object.values(recipes.breakfast));
         //1. Gen weeks for howManyWks
-        for(var i = 0; i < 4; i++){                
+        for(var i = 0; i < 5; i++){                
             //1. Gen Breakfast
         var breakfastObj =  recipes.breakfast;
         var breakfastArray = genWeek(breakfastObj);
@@ -40,8 +113,18 @@ var calendarController = (function(){
             weeks.push([breakfastArray, lunchArray, dinnerArray]);
         };
         //2. push schedule to mealSchedule
-        mealSchedule = weeks;
+                console.log(weeks);
+
+        var tempNum = weeks.length;
+         for(var i = 0; i < 3; i++){
+             weeks[0][i].splice(0, startDay);
+        weeks[(weeks.length - 1)][i].splice(remainder);
+         };
+        console.log(weeks);
+             
+   mealSchedule = weeks;
         console.log(mealSchedule);
+        
         
         return weeks;
     };
@@ -53,11 +136,14 @@ var calendarController = (function(){
                    var tempRandom = (Math.round(Math.random()) * (someObj.length - 1))
                     weekArray.push(someObj[tempRandom]);
                    };
+        console.log(weekArray);
         return weekArray;
+        
     };
     
 return {
-    generateMonth: generateMonth
+    generateMonth: generateMonth,
+    writeCalendar: writeCalendar
 }    
 })();
 
@@ -244,12 +330,17 @@ var appController = (function(calCtrl, dataCtrl, UICtrl){
     
     //// FUNCTIONS ////
     function innit(){
+        var dateNums= [2018, 0]
         var breakfastArray = dataCtrl.processrecipes(dataCtrl.recipes.breakfast);
-        monthRecipes = calCtrl.generateMonth(2, dataCtrl.recipes);
-        weeklyShoppingList();
+        monthRecipes = calCtrl.generateMonth(2, dataCtrl.recipes, dateNums);
+        var shoppingList = weeklyShoppingList(dateNums[0], dateNums[1]);
+        calCtrl.writeCalendar(dateNums[0], dateNums[1], shoppingList);
     }
     
-    function weeklyShoppingList(){
+    function weeklyShoppingList(someYear, someMonth){
+        var monthDate = new Date(someYear, someMonth, 1);
+        var monthLength = monthDate.monthDays();
+        
         var weeklyLists = [];
         var breakfastOrder = [];
         var lunchOrder = [];
@@ -269,9 +360,6 @@ var appController = (function(calCtrl, dataCtrl, UICtrl){
             console.log(ingredientList);
             console.log(shoppingList);
             
-            ingredientList = [];
-            shoppingList = '';
-            // console.log(shoppingList);
             
             cur[0].forEach(function(cur){
                 breakfastOrder.push(cur[0]);
@@ -285,9 +373,33 @@ var appController = (function(calCtrl, dataCtrl, UICtrl){
                 dinnerOrder.push(cur[0]);
             });
             
+            weeklyLists.push(shoppingList);
+            
         });
-        // console.log(breakfastOrder);
+        
+        var remainder = monthLength % 7;
+        
+        if(remainder !== 0){
+            var cutoutNum = weeklyLists.length - remainder;
+            weeklyLists[weeklyLists.length - 1].length = cutoutNum;
+        }
+        
+        console.log(breakfastOrder);
+        console.log(lunchOrder);
+        console.log(dinnerOrder);
+        console.log(weeklyLists);
+        
+        return {
+            weeklyLists: weeklyLists,
+            breakfastOrder: breakfastOrder,
+            lunchOrder: lunchOrder,
+            dinnerOrder: dinnerOrder
+        }
     };
+    
+    function populateCal(){
+        
+    }
     
     return {
        innit: innit
