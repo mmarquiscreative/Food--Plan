@@ -44,7 +44,7 @@ var calendarController = (function(){
         
         for(var i = 0; i < mealsObj.breakfastOrder.length; i++){
             var tempArray = [];
-            console.log(mealsObj.breakfastOrder);
+            // console.log(mealsObj.breakfastOrder);
             
         tempArray = [weekdays[whichDay], mealsObj.breakfastOrder[i], mealsObj.lunchOrder[i], mealsObj.dinnerOrder[i]];
             
@@ -81,7 +81,7 @@ var calendarController = (function(){
         
         var recipes = recipesObj;
         var weeks = [];
-        console.log(weeks);
+        // console.log(weeks);
         
         var length = 7;
         // console.log(Object.values(recipes.breakfast));
@@ -118,30 +118,50 @@ var calendarController = (function(){
     function genWeek(someObj){
         var weekArray = [];
         var usedRecipes = [];
-                for(var i = 0; i < 7; i = i + 0){
+                for(var i = 0; i < 7; i){
                     
-                   var tempRandom = (Math.round(Math.random()) * (someObj.length - 1));
+                   var tempRandom = (((Math.round(Math.random() 
+* (someObj.length - 1)))));
+                    
                     if(8 - i >= someObj[tempRandom][1]){
-                       if(usedRecipes.includes(someObj[tempRandom][0]) && (someObj[tempRandom][1] > 3)){
-                        break;
-                    } else {
-                        console.log(!usedRecipes.includes(someObj[tempRandom][0]));
-                        usedRecipes.push(someObj[tempRandom][0]);
-                        for(var a = 0; a < someObj[tempRandom][1]; a++){
-                            if(i < 7){
-                                weekArray.push(someObj[tempRandom]);
-                                i++
-                            }
-                        };
-                    }
+                        
+                       if(usedRecipes.includes(someObj[tempRandom][0]) && (someObj[tempRandom][1] > 1)){
+                           var howMany = 0;
+                           
+                           while((someObj[tempRandom][1] > 1) && howMany < 4){
+                                howMany = 0;
+                               usedRecipes.forEach(function(cur){
+                               if(cur === someObj[tempRandom][0]){
+                                   howMany++;
+                               };
+                           });
+                               
+                                tempRandom = ((Math.round(Math.random() 
+* (someObj.length - 1))));
+                                console.log(someObj[tempRandom][0]);
+                            };
+                     
+                        } else {
+                            
+                            // console.log(!usedRecipes.includes(someObj[tempRandom][0]));
+                            usedRecipes.push(someObj[tempRandom][0]);
+                            
+                            for(var a = 0; a < someObj[tempRandom][1]; a++){
+                                
+                                if(i < 7){
+                                    
+                                    weekArray.push(someObj[tempRandom]);
+                                    i++
+                                }
+                            };
+                        }
                     } else {
                         console.log('Had ' + (7 - i) + ' days left and the meal served ' + someObj[tempRandom][1]);
                     };
-                    console.log(i);
-                   };
+                // console.log(i);
+                };
         console.log(weekArray);
         return weekArray;
-        
     };
     
 return {
@@ -156,39 +176,22 @@ var dataController = (function(){
     //// VARIABLES ////
     var recipes = {
         breakfast: [
-            ['latkes', 1,
-                [4, ' lbs ', 'Potato'],
-                [1, ' medium ', 'Onion'],
-                [4, ' ', 'Egg'],
-                [1, ' Tbsp ', 'Garlic']
+            ['Eggs', 1,
+                [3, ' ', 'Eggs']
             ],
             ['Oatmeal', 1,
                 [1.5, ' Cup ', 'Oats'],
-                [3, ' Cup ', 'Water'],
-                [0.5, ' Cup ', 'Strawberry']
+                [0.5, ' Cup ', 'Strawberry'],
+                [1, ' Tbsp ', 'Chia Seeds']
             ]
         ],
         lunch: [
-            ['pollo', 1,
-                [4, ' lbs ', 'Potato'],
-                [1, ' medium ', 'Onion'],
-                [4, ' ', 'Egg'],
-                [1, ' Tbsp ', 'Garlic']
-            ],
-            ['soup', 1,
-                [1.5, ' Cup ', 'Oats'],
-                [3, ' Cup ', 'Water'],
-                [0.5, ' Cup ', 'Strawberry']
-            ]
-        ],
-        dinner: [
             ['Golden Cauliflower Cream Soup', 3,
                 [5, ' cup ', 'Kale'],
                 [1, ' head ', 'Cauliflower'],
                 [3, ' large ', 'Carrots'],
                 [2, ' cup ', 'raw Cashew'],
                 [2, ' cloves ', 'Garlic'],
-                [2, ' Tbsp ', 'No-salt Seasoning'],
                 [0.5, ' tsp ', 'Ground Nutmeg']
             ],
             ['Split Pea Sweet Potato Soup', 1,
@@ -199,8 +202,7 @@ var dataController = (function(){
                 [1, ' Med ', 'Onion'],
                 [2, ' Med ', 'Carrots'],
                 [2, ' Stalks ', 'Celery'],
-                [1, ' tsp ', 'Liquid Aminos'],
-                [0.25, ' tsp ', 'Garlic Powder']
+                [1, ' tsp ', 'Liquid Aminos']
             ],
             ['Indian Red Lentil Stew', 2,
                 [1, ' med ', 'onion'],
@@ -214,6 +216,39 @@ var dataController = (function(){
                 [16, 'oz ', 'Split Red Lentils'],
                 [32, 'oz ', 'Veggie Stock']
             ]
+        ],
+        dinner: [
+            ['salad', 1,
+                [.3, ' head ', 'Romaine'],
+                [1, ' cup ', 'Spinach'],
+                [.5, ' cup ', 'Walnuts'],
+                [1, ' Tbsp ', 'Sunflower Seeds']
+            ],
+            ['Bean Burgers', 2,
+                [0.25, ' cup ', 'Raw Sunflower Seeds'],
+                [2, ' cups ', 'Kidney Beans'],
+                [0.5, ' cup ', 'Minced Onion'],
+                [1, ' Tbsp ', 'Rolled Oats'],
+                [0.5, ' Tbsp ', 'Chili Powder']
+             ],
+             ['Unfried Rice', 1,
+                [3, ' cups ', 'Rice'],
+                [16, 'oz block ', 'Firm Tofu'],
+                [2, ' cups ', 'Frozen Mixed Veggies'],
+                [1, ' cup ', 'Green Onion'],
+                [16, 'oz ', 'Veggie Broth'],
+                [3, ' Tbsp ', 'Liquid Aminos'],
+                [.3, ' cup ', 'Nutritional Yeast'],
+                [.5, ' Tbsp ', 'Onion Powder'],
+                [.25, ' Tbsp ', 'Ginger Powder']
+            ],
+            ['Smoothie', 1,
+                [2, ' cups ', 'Kale'],
+                [1, ' ', 'Apple'],
+                [1, ' ', 'Orange'],
+                [.25, ' bottle ', 'Kevita'],
+                [.25, ' cup ', 'Almonds']
+            ],
         ]
         
     };
@@ -331,14 +366,14 @@ var UIController = (function(){
         var dailyMealArray = [];
         var weekOfMeals = [];
         
-        monthObj.weekLists.forEach(function(cur){
+        monthObj.weekLists.forEach(function(cur, index){
             
-            var weekGroceries = ('<div><h3>Week ' + cur.index + ' Shopping List</h3><p>');
+            var weekGroceries = ('<td><h3>Week ' + (index + 1) + ' Shopping List</h3><div><p>');
             cur.forEach(function(cur){
                 weekGroceries += (cur + '<br/>');
                 });
             
-            weekListArray.push(weekGroceries);
+            weekListArray.push((weekGroceries + '</div></td>'));
             
             });
             console.log(weekListArray);
@@ -380,7 +415,7 @@ var UIController = (function(){
      
         
         tableArray.forEach(function(cur){
-            
+            console.log(tableArray);
         document.querySelector('#' + htmlStrings.ids.mealCalendar).innerHTML += '<tr>' + cur[1] + '</tr>';
             
             document.querySelector('#' + htmlStrings.ids.weeklyGrocery).innerHTML += cur[0];

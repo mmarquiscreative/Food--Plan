@@ -3,9 +3,29 @@
     font-family: 'Source Sans', sans-serif;
 }
 
+h1{
+    color: #fff;
+    font-weight: 500;
+    letter-spacing: .05rem;
+    margin-bottom: -1rem;
+    margin-left: 1rem;
+}
+
+body{
+        background: rgba(77,188,142,1);
+background: -moz-linear-gradient(top, rgba(77,188,142,1) 0%, rgba(51,171,135,1) 22%, rgba(0,138,120,1) 65%);
+background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(77,188,142,1)), color-stop(22%, rgba(51,171,135,1)), color-stop(65%, rgba(0,138,120,1)));
+background: -webkit-linear-gradient(top, rgba(77,188,142,1) 0%, rgba(51,171,135,1) 22%, rgba(0,138,120,1) 65%);
+background: -o-linear-gradient(top, rgba(77,188,142,1) 0%, rgba(51,171,135,1) 22%, rgba(0,138,120,1) 65%);
+background: -ms-linear-gradient(top, rgba(77,188,142,1) 0%, rgba(51,171,135,1) 22%, rgba(0,138,120,1) 65%);
+background: linear-gradient(to bottom, rgba(77,188,142,1) 0%, rgba(51,171,135,1) 22%, rgba(0,138,120,1) 65%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4dbc8e', endColorstr='#008a78', GradientType=0 );
+
+}
 
 table {
     width: 100%;
+    border-spacing: 20px;
 }
 
 tr {
@@ -16,12 +36,13 @@ td {
     padding: 1.2rem;
     margin: 1rem;
     line-height: 1.2rem;
-    width: 14%;
+    width: 12%;
     height: 100%;
-    border: 1px solid lightgrey;
     color: #2d2d2d;
     vertical-align: top;
-    font-size: .8rem;
+    font-size: .7rem;
+    box-shadow: 0px 1px 3px #494949;
+    background-color: #fff;
 }
 
 td > h4 {
@@ -29,4 +50,10 @@ td > h4 {
      margin-bottom: -.5rem;
     color: #4dbc8e;
     font-size: 1rem;
+}
+#weeklyGrocery div{
+    height: 10rem;
+  overflow: scroll;
+  text-overflow:ellipsis;
+  white-space: nowrap;
 }
