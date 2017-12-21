@@ -29,18 +29,10 @@ var calendarController = (function(){
         }
         
         return startNum;
+    }
     
     
-    function shapeWeekLists(someArray, startDay, someLength){
-        var tempArray = someArray;
-        var remainder = tempArray.length % someLength;
-        
-        tempArray[0].splice(0, startDay);
-        tempArray[(tempArray.length - 1)].splice(remainder);
-        
-        console.log(tempArray);
-    };
-    
+   
     
     function writeCalendar(someYear, someMonth, mealsObj){
         var testDate = new Date(someYear, someMonth, 1);
@@ -50,33 +42,29 @@ var calendarController = (function(){
         var monthArray = [];
         var weekLists = [];
         
-        for(var i = 0; i < monthLength; i++){
+        for(var i = 0; i < mealsObj.breakfastOrder.length; i++){
             var tempArray = [];
+            console.log(mealsObj.breakfastOrder);
             
         tempArray = [weekdays[whichDay], mealsObj.breakfastOrder[i], mealsObj.lunchOrder[i], mealsObj.dinnerOrder[i]];
             
             monthArray.push(tempArray);
             
-            if(whichDay === 0 || i === (monthLength - 1)){
+            if(whichDay === 0){
                 
                 weekLists.push(mealsObj.weeklyLists[weekLists.length]);
             };
             
             whichDay = updateWeekDay(whichDay);
-        }
-        
-        shapeWeekLists(mealsObj.weeklyLists, whichDay, monthLength);
-        
+        };
+                
         console.log(monthArray);
         console.log(weekLists);
-        // calendar dates
-    
         
-        
-        // meals per day
-        
-        
-        // weekly food list
+        return{
+            monthArray: monthArray,
+            weekLists: weekLists
+        };
         
     };
     
@@ -93,7 +81,8 @@ var calendarController = (function(){
         
         var recipes = recipesObj;
         var weeks = [];
-        console.log(howManyWks);
+        console.log(weeks);
+        
         var length = 7;
         // console.log(Object.values(recipes.breakfast));
         //1. Gen weeks for howManyWks
@@ -113,17 +102,14 @@ var calendarController = (function(){
             weeks.push([breakfastArray, lunchArray, dinnerArray]);
         };
         //2. push schedule to mealSchedule
-                console.log(weeks);
 
-        var tempNum = weeks.length;
+        /* var tempNum = weeks.length;
          for(var i = 0; i < 3; i++){
              weeks[0][i].splice(0, startDay);
         weeks[(weeks.length - 1)][i].splice(remainder);
-         };
-        console.log(weeks);
+         };*/
              
    mealSchedule = weeks;
-        console.log(mealSchedule);
         
         
         return weeks;
@@ -131,10 +117,27 @@ var calendarController = (function(){
     
     function genWeek(someObj){
         var weekArray = [];
-                for(var i = 0; i < 7; i++){
+        var usedRecipes = [];
+                for(var i = 0; i < 7; i = i + 0){
                     
-                   var tempRandom = (Math.round(Math.random()) * (someObj.length - 1))
-                    weekArray.push(someObj[tempRandom]);
+                   var tempRandom = (Math.round(Math.random()) * (someObj.length - 1));
+                    if(8 - i >= someObj[tempRandom][1]){
+                       if(usedRecipes.includes(someObj[tempRandom][0]) && (someObj[tempRandom][1] > 3)){
+                        break;
+                    } else {
+                        console.log(!usedRecipes.includes(someObj[tempRandom][0]));
+                        usedRecipes.push(someObj[tempRandom][0]);
+                        for(var a = 0; a < someObj[tempRandom][1]; a++){
+                            if(i < 7){
+                                weekArray.push(someObj[tempRandom]);
+                                i++
+                            }
+                        };
+                    }
+                    } else {
+                        console.log('Had ' + (7 - i) + ' days left and the meal served ' + someObj[tempRandom][1]);
+                    };
+                    console.log(i);
                    };
         console.log(weekArray);
         return weekArray;
@@ -153,42 +156,63 @@ var dataController = (function(){
     //// VARIABLES ////
     var recipes = {
         breakfast: [
-            ['latkes',
+            ['latkes', 1,
                 [4, ' lbs ', 'Potato'],
                 [1, ' medium ', 'Onion'],
                 [4, ' ', 'Egg'],
                 [1, ' Tbsp ', 'Garlic']
             ],
-            ['Oatmeal',
+            ['Oatmeal', 1,
                 [1.5, ' Cup ', 'Oats'],
                 [3, ' Cup ', 'Water'],
                 [0.5, ' Cup ', 'Strawberry']
             ]
         ],
         lunch: [
-            ['pollo',
+            ['pollo', 1,
                 [4, ' lbs ', 'Potato'],
                 [1, ' medium ', 'Onion'],
                 [4, ' ', 'Egg'],
                 [1, ' Tbsp ', 'Garlic']
             ],
-            ['soup',
+            ['soup', 1,
                 [1.5, ' Cup ', 'Oats'],
                 [3, ' Cup ', 'Water'],
                 [0.5, ' Cup ', 'Strawberry']
             ]
         ],
         dinner: [
-            ['pasta',
-                [4, ' lbs ', 'Potato'],
-                [1, ' medium ', 'Onion'],
-                [4, ' ', 'Egg'],
-                [1, ' Tbsp ', 'Garlic']
+            ['Golden Cauliflower Cream Soup', 3,
+                [5, ' cup ', 'Kale'],
+                [1, ' head ', 'Cauliflower'],
+                [3, ' large ', 'Carrots'],
+                [2, ' cup ', 'raw Cashew'],
+                [2, ' cloves ', 'Garlic'],
+                [2, ' Tbsp ', 'No-salt Seasoning'],
+                [0.5, ' tsp ', 'Ground Nutmeg']
             ],
-            ['Moose',
+            ['Split Pea Sweet Potato Soup', 1,
+                [32, 'oz ', 'Veggie Broth'],
+                [2.25, ' Cup ', 'Dry Split Peas'],
+                [2, ' Med ', 'Sweet Potatoes'],
                 [1.5, ' Cup ', 'Oats'],
-                [3, ' Cup ', 'Water'],
-                [0.5, ' Cup ', 'Strawberry']
+                [1, ' Med ', 'Onion'],
+                [2, ' Med ', 'Carrots'],
+                [2, ' Stalks ', 'Celery'],
+                [1, ' tsp ', 'Liquid Aminos'],
+                [0.25, ' tsp ', 'Garlic Powder']
+            ],
+            ['Indian Red Lentil Stew', 2,
+                [1, ' med ', 'onion'],
+                [3, ' med ', 'Carrots'],
+                [2, ' stalks ', 'Celery'],
+                [2, ' ', 'Parsnips'],
+                [1, ' 8oz can ', 'Diced Tomatoes'],
+                [0.33, ' cup ', 'Nutritional Yeast'],
+                [1, ' Tbsp ', 'Garlic Powder'],
+                [3, ' Tbsp ', 'Dried Dill Weed'],
+                [16, 'oz ', 'Split Red Lentils'],
+                [32, 'oz ', 'Veggie Stock']
             ]
         ]
         
@@ -213,8 +237,7 @@ var dataController = (function(){
     function loadIngredients(recipeArray){
         var returnArray = [];
         recipeArray.forEach(function(cur){
-            var sliceArray = cur.slice(1);
-                        
+            var sliceArray = cur.slice(2); 
             sliceArray.forEach(function(cur){
                 returnArray.push(cur);
 
@@ -225,7 +248,6 @@ return returnArray};
     function compileIngredients(someArray){
         var talliedIngredients = [];
         var returnArray = [];
-        
         someArray.forEach(function(cur){
             // console.log(cur);
             var thisIngredient = cur[2];
@@ -289,9 +311,86 @@ return returnArray};
 var UIController = (function(){
     
     //// VARIABLES ////
-    
+    var htmlStrings = {
+        ids: {
+            mealCalendar: 'mealCalendar',
+            weeklyGrocery: 'weeklyGrocery',
+            dateInput: 'dateInput'
+        }
+    };
     
     //// FUNCTIONS ////
+    
+    function genCalTable(monthObj){
+        var compiledHtml = '';
+        var tableArray = [];
+        var dayCount = -1;
+        var weekCount = 0;
+        
+        var weekListArray = [];
+        var dailyMealArray = [];
+        var weekOfMeals = [];
+        
+        monthObj.weekLists.forEach(function(cur){
+            
+            var weekGroceries = ('<div><h3>Week ' + cur.index + ' Shopping List</h3><p>');
+            cur.forEach(function(cur){
+                weekGroceries += (cur + '<br/>');
+                });
+            
+            weekListArray.push(weekGroceries);
+            
+            });
+            console.log(weekListArray);
+        
+        monthObj.monthArray.forEach(function(cur){
+            var dayMeals = '';
+
+            dayMeals += '<td><h4>' + cur[0] + '</h4><br/>' + cur[1] + '<hr/>' + cur[2] + '<hr/>' + cur[3] + '</td>'
+            
+            dailyMealArray.push(dayMeals);
+
+
+
+
+
+        });
+
+        console.log(dailyMealArray);
+            var tempMealHold = '';
+            var i = 0;
+        dailyMealArray.forEach(function(cur){
+        tempMealHold += cur;
+        if(i === 6){
+            i = 0;
+            weekOfMeals.push(tempMealHold);
+            tempMealHold = '';
+        } else {
+            i++;
+        };
+            
+            
+        });
+        
+        console.log(weekOfMeals);
+        
+        for(var i = 0; i < weekListArray.length; i++){
+            tableArray.push([weekListArray[i], weekOfMeals[i]]);
+        }
+     
+        
+        tableArray.forEach(function(cur){
+            
+        document.querySelector('#' + htmlStrings.ids.mealCalendar).innerHTML += '<tr>' + cur[1] + '</tr>';
+            
+            document.querySelector('#' + htmlStrings.ids.weeklyGrocery).innerHTML += cur[0];
+        });
+        
+                
+
+    };
+    
+    
     function listToArray(nodeList){
         var tempList, newArray;
         tempList = nodeList;
@@ -305,6 +404,9 @@ var UIController = (function(){
     };
     
     return {
+        
+        genCalTable: genCalTable,
+        htmlStrings: htmlStrings
        
     }
 })();
@@ -330,11 +432,12 @@ var appController = (function(calCtrl, dataCtrl, UICtrl){
     
     //// FUNCTIONS ////
     function innit(){
-        var dateNums= [2018, 0]
-        var breakfastArray = dataCtrl.processrecipes(dataCtrl.recipes.breakfast);
-        monthRecipes = calCtrl.generateMonth(2, dataCtrl.recipes, dateNums);
+        
+        var dateNums= [2018, 0];
+        monthRecipes = calCtrl.generateMonth(5, dataCtrl.recipes, dateNums);
         var shoppingList = weeklyShoppingList(dateNums[0], dateNums[1]);
-        calCtrl.writeCalendar(dateNums[0], dateNums[1], shoppingList);
+        var calObj = calCtrl.writeCalendar(dateNums[0], dateNums[1], shoppingList);
+        UICtrl.genCalTable(calObj);
     }
     
     function weeklyShoppingList(someYear, someMonth){
@@ -345,6 +448,7 @@ var appController = (function(calCtrl, dataCtrl, UICtrl){
         var breakfastOrder = [];
         var lunchOrder = [];
         var dinnerOrder = [];
+        console.log(monthRecipes);
         monthRecipes.forEach(function(cur, index){
             var ingredientList = [];
             var shoppingList = '';
@@ -357,8 +461,6 @@ var appController = (function(calCtrl, dataCtrl, UICtrl){
             });
             
             var shoppingList = dataCtrl.processrecipes(ingredientList);
-            console.log(ingredientList);
-            console.log(shoppingList);
             
             
             cur[0].forEach(function(cur){
@@ -377,17 +479,16 @@ var appController = (function(calCtrl, dataCtrl, UICtrl){
             
         });
         
-        var remainder = monthLength % 7;
+        /* var remainder = monthLength % 7;
         
         if(remainder !== 0){
             var cutoutNum = weeklyLists.length - remainder;
             weeklyLists[weeklyLists.length - 1].length = cutoutNum;
-        }
-        
-        console.log(breakfastOrder);
-        console.log(lunchOrder);
-        console.log(dinnerOrder);
+        }*/
         console.log(weeklyLists);
+        console.log(breakfastOrder);
+        
+
         
         return {
             weeklyLists: weeklyLists,
@@ -396,6 +497,7 @@ var appController = (function(calCtrl, dataCtrl, UICtrl){
             dinnerOrder: dinnerOrder
         }
     };
+   
     
     function populateCal(){
         

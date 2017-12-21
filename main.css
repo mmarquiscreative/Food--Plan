@@ -1,0 +1,32 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Source Sans', sans-serif;
+}
+
+
+table {
+    width: 100%;
+}
+
+tr {
+    width: 100%;
+}
+
+td {
+    padding: 1.2rem;
+    margin: 1rem;
+    line-height: 1.2rem;
+    width: 14%;
+    height: 100%;
+    border: 1px solid lightgrey;
+    color: #2d2d2d;
+    vertical-align: top;
+    font-size: .8rem;
+}
+
+td > h4 {
+    margin-top: -.5rem;
+     margin-bottom: -.5rem;
+    color: #4dbc8e;
+    font-size: 1rem;
+}
